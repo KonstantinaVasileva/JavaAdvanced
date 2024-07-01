@@ -1,0 +1,72 @@
+package Advanced.ExamPreparation.Avg18_2022;
+
+import java.util.ArrayDeque;
+import java.util.Scanner;
+
+public class TreasureHunt_02 {
+    private static String[][] matrix;
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        String[] size = scanner.nextLine().split(" ");
+
+        int row = Integer.parseInt(size[0]);
+        int col = Integer.parseInt(size[1]);
+        matrix = new String[row][col];
+        ArrayDeque<String> steps = new ArrayDeque<>();
+
+        int playerRow = -1;
+        int playerCol = -1;
+
+        for (int i = 0; i < row; i++) {
+            matrix[i] = scanner.nextLine().split(" ");
+            for (int j = 0; j < matrix[i].length; j++) {
+                if (matrix[i][j].equals("Y")) {
+                    playerRow = i;
+                    playerCol = j;
+                }
+            }
+        }
+
+        while (true) {
+            String command = scanner.nextLine();
+            if (command.equals("Finish")) {
+                break;
+            }
+            if (command.equals("left")) {
+                if (isExist(playerRow, playerCol - 1)) {
+                    playerCol--;
+                    steps.offer(command);
+                }
+            } else if (command.equals("right")) {
+                if (isExist(playerRow, playerCol + 1)) {
+                    playerCol++;
+                    steps.offer(command);
+                }
+            } else if (command.equals("up")) {
+                if (isExist(playerRow - 1, playerCol)) {
+                    playerRow--;
+                    steps.offer(command);
+                }
+            } else if (command.equals("down")) {
+                if (isExist(playerRow + 1, playerCol)) {
+                    playerRow++;
+                    steps.offer(command);
+                }
+            }
+        }
+
+        if (matrix[playerRow][playerCol].equals("X")) {
+            System.out.printf("I've found the treasure!\nThe right path is %s", String.join(", ", steps));
+        } else {
+            System.out.println("The map is fake!");
+        }
+    }
+
+    private static boolean isExist(int row, int col) {
+        return (row >= 0 && row < matrix.length
+                && col >= 0 && col < matrix[row].length
+                && !matrix[row][col].equals("T"));
+    }
+}
